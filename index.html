@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <script src="node_modules/jquery/dist/jquery.min.js"></script>
+  <link rel="stylesheet" href="dist/jquery-simple-menu.css">
+  <script src="dist/jquery-simple-menu.js"></script>
+</head>
+<body>
+  <h1>Basic use</h1>
+  <ul id="basic_menu">
+    <li>
+      <a href="#">Menu1</a>
+      <ul>
+        <li>
+          <a href="#">Menu1-1</a>
+          <ul>
+            <li><a href="#">Menu1-1-1</a></li>
+            <li><a href="#">Menu1-1-2</a></li>
+          </ul>
+        </li>
+        <li>
+          <a href="#">Menu1-2</a>
+          <ul>
+            <li><a href="#">Menu1-2-1</a></li>
+            <li><a href="#">Menu1-2-2</a></li>
+          </ul>
+        </li>
+        <li>
+          <a href="#">Menu1-3</a>
+          <ul>
+            <li><a href="#">Menu1-3-1</a></li>
+            <li>
+              <a href="#">Menu1-3-2</a>
+              <ul>
+                <li><a href="#">Menu1-3-2-1</a></li>
+                <li><a href="#">Menu1-3-2-1</a></li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <a href="#">Menu2</a>
+      <ul>
+        <li>
+          <a href="#">Menu2-1</a>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <a href="#">Menu3</a>
+    </li>
+  </ul>
+  <script>
+  $('#basic_menu').simpleMenu();
+  </script>
+
+  <h1>Auto open</h1>
+  <ul id="mouse_menu">
+    <li>
+      <a href="#">Menu1</a>
+      <ul>
+        <li><a href="#">Menu1-1</a></li>
+        <li><a href="#">Menu1-2</a></li>
+        <li><a href="#">Menu1-3</a></li>
+      </ul>
+    </li>
+    <li>
+      <a href="#">Menu2</a>
+      <ul>
+        <li><a href="#">Menu2-1</a></li>
+        <li><a href="#">Menu2-2</a></li>
+        <li><a href="#">Menu2-3</a></li>
+      </ul>
+    </li>
+  </ul>
+  <script>
+  $('#mouse_menu').simpleMenu({
+    autoOpen: true
+  });
+  </script>
+
+  <h1>Vertical</h1>
+  <ul id="vertical_menu" style="width: 70px;">
+    <li>
+      <a href="#">Menu1</a>
+      <ul>
+        <li><a href="#">Menu1-1</a></li>
+        <li><a href="#">Menu1-2</a></li>
+        <li><a href="#">Menu1-3</a></li>
+      </ul>
+    </li>
+    <li>
+      <a href="#">Menu2</a>
+      <ul>
+        <li><a href="#">Menu2-1</a></li>
+        <li><a href="#">Menu2-2</a></li>
+        <li><a href="#">Menu2-3</a></li>
+      </ul>
+    </li>
+  </ul>
+  <script>
+  $('#vertical_menu').simpleMenu({
+    align: 'vertical'
+  });
+  </script>
+</body>
+</html>
