@@ -5,25 +5,25 @@ describe('jquery-simple-menu', function() {
 
   it('opens menu', function() {
     var $menu = $('#basic_menu');
-    var $link = $menu.children('li:first');
+    var $link = $menu.find('li > a:first');
     $menu.simpleMenu();
 
     $link.click();
-    expect($link.hasClass('sm-opened')).toEqual(true);
+    expect($link.parent().hasClass('sm-opened')).toEqual(true);
 
     $link.click();
-    expect($link.hasClass('sm-opened')).toEqual(false);
+    expect($link.parent().hasClass('sm-opened')).toEqual(false);
   });
 
   it('closes menu from window event', function() {
     var $menu = $('#basic_menu');
-    var $link = $menu.children('li:first');
+    var $link = $menu.find('li > a:first');
     $menu.simpleMenu();
 
     $link.click();
-    expect($link.hasClass('sm-opened')).toEqual(true);
+    expect($link.parent().hasClass('sm-opened')).toEqual(true);
 
     $(document).click();
-    expect($link.hasClass('sm-opened')).toEqual(false);
+    expect($link.parent().hasClass('sm-opened')).toEqual(false);
   });
 });

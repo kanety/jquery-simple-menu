@@ -14,10 +14,7 @@ export default class SimpleMenu {
     this.$menu = $(menu);
 
     this.init();
-
-    if (!this.options.autoOpen) {
-      this.bind();
-    }
+    this.bind();
   }
 
   init() {
@@ -37,31 +34,38 @@ export default class SimpleMenu {
   }
 
   bind() {
-    this.$menu.on(`click.${NAMESPACE}`, '> li', (e) => {
-      let $submenu = $(e.currentTarget).children('ul');
-      if ($submenu.length) {
+    this.$menu.on(`click.${NAMESPACE}`, 'a', (e) => {
+      if ($(e.target).parent().hasClass('sm-expandable')) {
         e.preventDefault();
-        if (!this.active) {
-          e.stopPropagation();
-        }
-        this.toggle($submenu);
-        this.active = true;
-      }
-    }).on(`mouseenter.${NAMESPACE}`, '> li', (e) => {
-      if (!this.active) {
-        return;
-      }
-      this.closeAll();
-      let $submenu = $(e.currentTarget).children('ul');
-      if ($submenu.length) {
-        this.open($submenu);
       }
     });
 
-    $(document).on(`click.${NAMESPACE}`, (e) => {
-      this.closeAll();
-      this.active = false;
-    });
+    if (!this.options.autoOpen) {
+      this.$menu.on(`click.${NAMESPACE}`, '> li > a', (e) => {
+        let $submenu = $(e.target).parent().children('ul');
+        if ($submenu.length) {
+          if (!this.active) {
+            e.stopPropagation();
+          }
+          this.toggle($submenu);
+          this.active = true;
+        }
+      }).on(`mouseenter.${NAMESPACE}`, '> li > a', (e) => {
+        if (!this.active) {
+          return;
+        }
+        this.closeAll();
+        let $submenu = $(e.target).parent().children('ul');
+        if ($submenu.length) {
+          this.open($submenu);
+        }
+      });
+
+      $(document).on(`click.${NAMESPACE}`, (e) => {
+        this.closeAll();
+        this.active = false;
+      });
+    }
   }
 
   unbind() {
