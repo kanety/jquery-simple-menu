@@ -14,7 +14,10 @@ export default class SimpleMenu {
     this.$menu = $(menu);
 
     this.init();
-    this.bind();
+
+    if (!this.options.autoOpen) {
+      this.bind();
+    }
   }
 
   init() {
@@ -37,6 +40,7 @@ export default class SimpleMenu {
     this.$menu.on(`click.${NAMESPACE}`, '> li', (e) => {
       let $submenu = $(e.currentTarget).children('ul');
       if ($submenu.length) {
+        e.preventDefault();
         if (!this.active) {
           e.stopPropagation();
         }
