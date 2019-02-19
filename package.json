@@ -1,6 +1,6 @@
 {
   "name": "@kanety/jquery-simple-menu",
-  "description": "",
+  "description": "A jquery plugin for simple menu",
   "version": "0.1.0",
   "author": "Yoshikazu Kaneta <kaneta@sitebridge.co.jp>",
   "repository": {

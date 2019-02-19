@@ -18,22 +18,23 @@ export default class SimpleMenu {
   }
 
   init() {
-    this.$menu.addClass(NAMESPACE).addClass(`menu-${this.options.align}`);
+    this.$menu.addClass(NAMESPACE).addClass(`sm-${this.options.align}`);
 
-    this.$menu.find('ul').addClass('menu-vertical');
+    this.$menu.find('ul').addClass('sm-vertical');
+
     this.$menu.find('li').each((i, elem) => {
       let $li = $(elem);
       if ($li.children('ul').length) {
-        $li.addClass('menu-expandable');
+        $li.addClass('sm-expandable');
       }
       if (this.options.autoOpen) {
-        $li.addClass('menu-autoopen');
+        $li.addClass('sm-autoopen');
       }
     });
   }
 
   bind() {
-    this.$menu.children('li').on(`click.${NAMESPACE}`, (e) => {
+    this.$menu.on(`click.${NAMESPACE}`, '> li', (e) => {
       let $submenu = $(e.currentTarget).children('ul');
       if ($submenu.length) {
         if (!this.active) {
@@ -42,7 +43,7 @@ export default class SimpleMenu {
         this.toggle($submenu);
         this.active = true;
       }
-    }).on(`mouseenter.${NAMESPACE}`, (e) => {
+    }).on(`mouseenter.${NAMESPACE}`, '> li', (e) => {
       if (!this.active) {
         return;
       }
@@ -65,7 +66,7 @@ export default class SimpleMenu {
   }
 
   toggle($submenu) {
-    if ($submenu.parent().hasClass('menu-opened')) {
+    if ($submenu.parent().hasClass('sm-opened')) {
       this.close($submenu);
     } else {
       this.open($submenu);
@@ -74,11 +75,13 @@ export default class SimpleMenu {
 
   open($submenu) {
     this.closeAll();
-    $submenu.parent().addClass('menu-opened');
+    $submenu.parent().addClass('sm-opened');
+    $submenu.css('display', 'flex');
   }
 
   close($submenu) {
-    $submenu.parent().removeClass('menu-opened');
+    $submenu.parent().removeClass('sm-opened')
+    $submenu.css('display', 'none');
   }
 
   closeAll() {

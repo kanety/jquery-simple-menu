@@ -5,34 +5,39 @@
   <script src="node_modules/jquery/dist/jquery.min.js"></script>
   <link rel="stylesheet" href="dist/jquery-simple-menu.css">
   <script src="dist/jquery-simple-menu.js"></script>
+  <style>
+  ul.submenu {
+    width: 120px;
+  }
+  </style>
 </head>
 <body>
   <h1>Basic use</h1>
   <ul id="basic_menu">
     <li>
       <a href="#">Menu1</a>
-      <ul>
+      <ul class="submenu">
         <li>
           <a href="#">Menu1-1</a>
-          <ul>
+          <ul class="submenu">
             <li><a href="#">Menu1-1-1</a></li>
             <li><a href="#">Menu1-1-2</a></li>
           </ul>
         </li>
         <li>
           <a href="#">Menu1-2</a>
-          <ul>
+          <ul class="submenu">
             <li><a href="#">Menu1-2-1</a></li>
             <li><a href="#">Menu1-2-2</a></li>
           </ul>
         </li>
         <li>
           <a href="#">Menu1-3</a>
-          <ul>
+          <ul class="submenu">
             <li><a href="#">Menu1-3-1</a></li>
             <li>
               <a href="#">Menu1-3-2</a>
-              <ul>
+              <ul class="submenu">
                 <li><a href="#">Menu1-3-2-1</a></li>
                 <li><a href="#">Menu1-3-2-1</a></li>
               </ul>
@@ -43,7 +48,7 @@
     </li>
     <li>
       <a href="#">Menu2</a>
-      <ul>
+      <ul class="submenu">
         <li>
           <a href="#">Menu2-1</a>
         </li>
@@ -61,7 +66,7 @@
   <ul id="mouse_menu">
     <li>
       <a href="#">Menu1</a>
-      <ul>
+      <ul class="submenu">
         <li><a href="#">Menu1-1</a></li>
         <li><a href="#">Menu1-2</a></li>
         <li><a href="#">Menu1-3</a></li>
@@ -69,7 +74,7 @@
     </li>
     <li>
       <a href="#">Menu2</a>
-      <ul>
+      <ul class="submenu">
         <li><a href="#">Menu2-1</a></li>
         <li><a href="#">Menu2-2</a></li>
         <li><a href="#">Menu2-3</a></li>
@@ -86,7 +91,7 @@
   <ul id="vertical_menu" style="width: 70px;">
     <li>
       <a href="#">Menu1</a>
-      <ul>
+      <ul class="submenu">
         <li><a href="#">Menu1-1</a></li>
         <li><a href="#">Menu1-2</a></li>
         <li><a href="#">Menu1-3</a></li>
@@ -94,7 +99,7 @@
     </li>
     <li>
       <a href="#">Menu2</a>
-      <ul>
+      <ul class="submenu">
         <li><a href="#">Menu2-1</a></li>
         <li><a href="#">Menu2-2</a></li>
         <li><a href="#">Menu2-3</a></li>

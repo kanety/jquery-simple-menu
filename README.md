@@ -20,7 +20,7 @@ Build html as follows:
 <ul id="menu">
   <li>
     <a href="#">Menu</a>
-    <ul>
+    <ul style="width: 120px;">
       <li><a href="#">Menu1</a></li>
       <li><a href="#">Menu2</a></li>
       <li><a href="#">Menu3</a></li>
@@ -33,6 +33,22 @@ Then run:
 
 ```javascript
 $('#menu').simpleMenu();
+```
+
+Open menu automatically on mouseover:
+
+```javascript
+$('#menu').simpleMenu({
+  autoOpen: true
+});
+```
+
+Charnge to vertical align:
+
+```javascript
+$('#menu').simpleMenu({
+  align: 'vertical'
+});
 ```
 
 ## License

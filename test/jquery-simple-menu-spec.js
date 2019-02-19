@@ -9,10 +9,10 @@ describe('jquery-simple-menu', function() {
     $menu.simpleMenu();
 
     $link.click();
-    expect($link.hasClass('menu-opened')).toEqual(true);
+    expect($link.hasClass('sm-opened')).toEqual(true);
 
     $link.click();
-    expect($link.hasClass('menu-opened')).toEqual(false);
+    expect($link.hasClass('sm-opened')).toEqual(false);
   });
 
   it('closes menu from window event', function() {
@@ -21,9 +21,9 @@ describe('jquery-simple-menu', function() {
     $menu.simpleMenu();
 
     $link.click();
-    expect($link.hasClass('menu-opened')).toEqual(true);
+    expect($link.hasClass('sm-opened')).toEqual(true);
 
     $(document).click();
-    expect($link.hasClass('menu-opened')).toEqual(false);
+    expect($link.hasClass('sm-opened')).toEqual(false);
   });
 });
