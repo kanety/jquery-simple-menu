@@ -12,7 +12,7 @@ Install from npm:
 
     $ npm install @kanety/jquery-simple-menu --save
 
-## Usage
+## Basic usage
 
 Build html as follows:
 
@@ -35,7 +35,7 @@ Then run:
 $('#menu').simpleMenu();
 ```
 
-Open menu automatically on mouseover:
+Open menu by mouse hovering:
 
 ```javascript
 $('#menu').simpleMenu({
@@ -43,10 +43,52 @@ $('#menu').simpleMenu({
 });
 ```
 
-Charnge to vertical align:
+Keep menu opened after clicking menu items:
 
 ```javascript
 $('#menu').simpleMenu({
+  autoOpen: true,
+  keepOpen: true
+});
+```
+
+Set checkable submenu:
+
+```javascript
+$('#menu').simpleMenu({
+  checkable: 'ul:first'
+});
+```
+
+Change to vertical align:
+
+```javascript
+$('#menu').simpleMenu({
+  align: 'vertical'
+});
+```
+
+## Context menu
+
+Set context menu container as follows:
+
+```html
+<div id="container"></div>
+<ul id="menu">
+  <li>
+    <a href="#">Menu</a>
+    <ul style="width: 120px;">
+      <li><a href="#">Menu1</a></li>
+      <li><a href="#">Menu2</a></li>
+      <li><a href="#">Menu3</a></li>
+    </ul>
+  </li>
+</ul>
+```
+
+```javascript
+$('#menu').simpleMenu({
+  context: '#container',
   align: 'vertical'
 });
 ```

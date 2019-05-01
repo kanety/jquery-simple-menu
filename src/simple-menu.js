@@ -2,93 +2,165 @@ import $ from 'jquery';
 import { NAMESPACE } from './consts';
 
 const DEFAULTS = {
+  align: 'horizontal',
+  context: null,
+  checkable: null,
   autoOpen: false,
-  align: 'horizontal'
+  keepOpen: false
 };
 
 export default class SimpleMenu {
   constructor(menu, options = {}) {
     this.options = $.extend(true, {}, DEFAULTS, options);
 
-    this.active = false;
     this.$menu = $(menu);
+    this.$context = $(this.options.context);
+    this.uid = new Date().getTime() + Math.random();
+    this.active = false;
 
     this.init();
-    this.bind();
   }
 
   init() {
-    this.$menu.addClass(NAMESPACE).addClass(`sm-${this.options.align}`);
+    this.$menu.addClass(`${NAMESPACE} menu-${this.options.align}`);
+    this.$menu.find('ul').addClass('menu-vertical');
+    this.$menu.find('li:has(>ul)').addClass('menu-openable');
 
-    this.$menu.find('ul').addClass('sm-vertical');
+    if (this.options.context) {
+      this.$menu.addClass('menu-context').hide();
+    }
+    if (this.options.checkable) {
+      let $submenu = this.$menu.find(this.options.checkable);
+      $submenu.find('li').addClass('menu-space');
+      $submenu.find('li:not(:has(>ul))').addClass('menu-checkable');
+    }
 
-    this.$menu.find('li').each((i, elem) => {
-      let $li = $(elem);
-      if ($li.children('ul').length) {
-        $li.addClass('sm-expandable');
+    this.unbind();
+    this.bind();
+  }
+
+  bind() {
+    if (this.options.context) {
+      this.bindContext();
+    }
+
+    if (this.options.autoOpen) {
+      this.bindHover();
+    } else {
+      this.bindClick();
+    }
+
+    this.$menu.on(`click.${NAMESPACE}`, 'a', (e) => {
+      let $li = $(e.target).parent();
+      if ($li.hasClass('menu-checkable')) {
+        this.toggleCheck($li);
+        e.preventDefault();
       }
-      if (this.options.autoOpen) {
-        $li.addClass('sm-autoopen');
+      if ($li.hasClass('menu-openable')) {
+        e.preventDefault();
       }
     });
   }
 
-  bind() {
-    this.$menu.on(`click.${NAMESPACE}`, 'a', (e) => {
-      if ($(e.target).parent().hasClass('sm-expandable')) {
-        e.preventDefault();
-      }
-    });
-
-    if (!this.options.autoOpen) {
-      this.$menu.on(`click.${NAMESPACE}`, '> li > a', (e) => {
-        let $submenu = $(e.target).parent().children('ul');
-        if ($submenu.length) {
-          if (!this.active) {
-            e.stopPropagation();
+  bindClick() {
+    this.$menu.on(`click.${NAMESPACE}`, '> li', (e) => {
+      e.stopPropagation();
+      let $submenu = $(e.currentTarget).children('ul');
+      if ($submenu.length) {
+        if (this.isOpened($submenu)) {
+          if (!this.options.keepOpen) {
+            this.close($submenu);
+            this.active = false;
           }
-          this.toggle($submenu);
+        } else {
+          this.open($submenu);
           this.active = true;
         }
-      }).on(`mouseenter.${NAMESPACE}`, '> li > a', (e) => {
-        if (!this.active) {
-          return;
-        }
+      }
+    }).on(`mouseenter.${NAMESPACE}`, '> li', (e) => {
+      if (this.active) {
         this.closeAll();
-        let $submenu = $(e.target).parent().children('ul');
+        let $submenu = $(e.currentTarget).children('ul');
         if ($submenu.length) {
           this.open($submenu);
         }
-      });
+      }
+    });
 
-      $(document).on(`click.${NAMESPACE}`, (e) => {
-        this.closeAll();
-        this.active = false;
+    $(document).on(`click.${NAMESPACE}-${this.uid}`, (e) => {
+      this.closeAll();
+      this.active = false;
+    });
+  }
+
+  bindHover() {
+    this.$menu.on(`mouseenter.${NAMESPACE}`, '> li', (e) => {
+      let $submenu = $(e.currentTarget).children('ul');
+      if ($submenu.length) {
+        this.open($submenu);
+      }
+    }).on(`mouseleave.${NAMESPACE}`, '> li', (e) => {
+      let $submenu = $(e.currentTarget).children('ul');
+      if ($submenu.length) {
+        this.close($submenu);
+      }
+    });
+
+    if (!this.options.keepOpen) {
+      this.$menu.on(`click.${NAMESPACE}`, '> li', (e) => {
+        let $submenu = $(e.currentTarget).children('ul');
+        if ($submenu.length) {
+          this.close($submenu);
+        }
       });
     }
   }
 
+  bindContext() {
+    this.$context.on(`contextmenu.${NAMESPACE}`, (e) => {
+      e.preventDefault();
+      this.$menu.css({
+        display: 'flex',
+        position: 'absolute',
+        top: `${e.pageY + 1}px`,
+        left: `${e.pageX + 1}px`
+      });
+    });
+
+    this.$menu.on(`click.${NAMESPACE}`, 'a', (e) => {
+      this.$menu.hide();
+    });
+    $(document).on(`click.${NAMESPACE}-${this.uid}`, (e) => {
+      this.$menu.hide();
+    });
+  }
+
   unbind() {
     this.$menu.off(`.${NAMESPACE}`);
-    $(document).off(`.${NAMESPACE}`);
+    this.$context.off(`.${NAMESPACE}`);
+    $(document).off(`.${NAMESPACE}-${this.uid}`)
   }
 
   toggle($submenu) {
-    if ($submenu.parent().hasClass('sm-opened')) {
+    if (this.isOpened($submenu)) {
       this.close($submenu);
     } else {
       this.open($submenu);
     }
   }
 
+  isOpened($submenu) {
+    return $submenu.parent().hasClass('menu-opened');
+  }
+
   open($submenu) {
     this.closeAll();
-    $submenu.parent().addClass('sm-opened');
+    $submenu.parent().addClass('menu-opened');
     $submenu.css('display', 'flex');
   }
 
   close($submenu) {
-    $submenu.parent().removeClass('sm-opened')
+    $submenu.parent().removeClass('menu-opened')
     $submenu.css('display', 'none');
   }
 
@@ -96,6 +168,28 @@ export default class SimpleMenu {
     this.$menu.find('> li > ul').each((i, elem) => {
       this.close($(elem));
     });
+  }
+
+  toggleCheck($li) {
+    if (this.isChecked($li)) {
+      this.uncheck($li);
+    } else {
+      this.check($li);
+    }
+  }
+
+  isChecked($li) {
+    return $li.hasClass('menu-checked');
+  }
+
+  check($li) {
+    $li.addClass('menu-checked');
+    this.$menu.trigger('menu:checked', [$li]);
+  }
+
+  uncheck($li) {
+    $li.removeClass('menu-checked');
+    this.$menu.trigger('menu:unchecked', [$li]);
   }
 
   static getDefaults() {
