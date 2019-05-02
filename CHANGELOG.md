@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 0.2.0
+
+* Add contextmenu and checkable feature.
+* Add keepOpen option.
+* Tweak css class.
+
 ## 0.1.2
 
 * Fix link behaviour.
