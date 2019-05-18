@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.2.1
+
+* Remove stopPropagation call.
+
 ## 0.2.0
 
 * Add contextmenu and checkable feature.
