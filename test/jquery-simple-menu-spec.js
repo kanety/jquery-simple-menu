@@ -1,13 +1,13 @@
 describe('jquery-simple-menu', function() {
   beforeEach(function() {
     document.body.innerHTML = __html__['index.html'];
+    eval($('script').text());
   });
 
   it('opens menu by click', function() {
     var $menu = $('#click_menu');
     var $menuItem = $menu.find('li:first');
     var $link = $menuItem.find('a:first');
-    $menu.simpleMenu();
 
     $link.trigger('click');
     expect($menuItem.hasClass('menu-opened')).toEqual(true);
@@ -15,18 +15,21 @@ describe('jquery-simple-menu', function() {
     $link.trigger('click');
     expect($menuItem.hasClass('menu-opened')).toEqual(false);
 
-    $link.click();
+    $link.trigger('click');
     expect($menuItem.hasClass('menu-opened')).toEqual(true);
 
-    $(document).click();
+    $(document).trigger('click');
     expect($menuItem.hasClass('menu-opened')).toEqual(false);
+
+    spyOn(window, 'alert');
+    $menu.find('a[href="#Menu3"]').trigger('click');
+    expect(window.alert).toHaveBeenCalledWith('#Menu3');
   });
 
   it('keeps opened menu by click', function() {
     var $menu = $('#click_keep_menu');
     var $menuItem = $menu.find('li:first');
     var $link = $menuItem.find('a:first');
-    $menu.simpleMenu({ keepOpen: true });
 
     $link.trigger('click');
     expect($menuItem.hasClass('menu-opened')).toEqual(true);
@@ -39,9 +42,11 @@ describe('jquery-simple-menu', function() {
     var $menu = $('#hover_menu');
     var $menuItem = $menu.find('li:first');
     var $link = $menuItem.find('a:first');
-    $menu.simpleMenu({ autoOpen: true });
 
     $menuItem.trigger('mouseenter');
+    expect($menuItem.hasClass('menu-opened')).toEqual(true);
+
+    $link.trigger('click');
     expect($menuItem.hasClass('menu-opened')).toEqual(true);
 
     $menuItem.trigger('mouseleave');
@@ -52,7 +57,6 @@ describe('jquery-simple-menu', function() {
     var $menu = $('#hover_keep_menu');
     var $menuItem = $menu.find('li:first');
     var $link = $menuItem.find('a:first');
-    $menu.simpleMenu({ autoOpen: true, keepOpen: true, checkable: 'ul.submenu' });
 
     $menuItem.trigger('mouseenter');
     expect($menuItem.hasClass('menu-opened')).toEqual(true);
@@ -70,7 +74,6 @@ describe('jquery-simple-menu', function() {
   it('opens context menu', function() {
     var $menu = $('#context_menu');
     var $container = $('#container');
-    $menu.simpleMenu({ context: $container, align: 'vertical' });
 
     $container.trigger('contextmenu');
     expect($menu.is(':visible')).toEqual(true);

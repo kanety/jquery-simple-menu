@@ -64,7 +64,6 @@ export default class SimpleMenu {
 
   bindClick() {
     this.$menu.on(`click.${NAMESPACE}`, '> li', (e) => {
-      e.stopPropagation();
       let $submenu = $(e.currentTarget).children('ul');
       if ($submenu.length) {
         if (this.isOpened($submenu)) {
@@ -79,7 +78,6 @@ export default class SimpleMenu {
       }
     }).on(`mouseenter.${NAMESPACE}`, '> li', (e) => {
       if (this.active) {
-        this.closeAll();
         let $submenu = $(e.currentTarget).children('ul');
         if ($submenu.length) {
           this.open($submenu);
@@ -88,8 +86,10 @@ export default class SimpleMenu {
     });
 
     $(document).on(`click.${NAMESPACE}-${this.uid}`, (e) => {
-      this.closeAll();
-      this.active = false;
+      if (!$.contains(this.$menu[0], e.target)) {
+        this.closeAll();
+        this.active = false;
+      }
     });
   }
 
@@ -108,9 +108,11 @@ export default class SimpleMenu {
 
     if (!this.options.keepOpen) {
       this.$menu.on(`click.${NAMESPACE}`, '> li', (e) => {
-        let $submenu = $(e.currentTarget).children('ul');
-        if ($submenu.length) {
-          this.close($submenu);
+        if (e.target.parentNode != e.currentTarget) {
+          let $submenu = $(e.currentTarget).children('ul');
+          if ($submenu.length) {
+            this.close($submenu);
+          }
         }
       });
     }
