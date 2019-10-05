@@ -1,13 +1,13 @@
-describe('jquery-simple-menu', function() {
-  beforeEach(function() {
+describe('jquery-simple-menu', () => {
+  beforeEach(() => {
     document.body.innerHTML = __html__['index.html'];
     eval($('script').text());
   });
 
-  it('opens menu by click', function() {
-    var $menu = $('#click_menu');
-    var $menuItem = $menu.find('li:first');
-    var $link = $menuItem.find('a:first');
+  it('opens menu by click', () => {
+    let $menu = $('#click_menu');
+    let $menuItem = $menu.find('li').first();
+    let $link = $menuItem.find('a').first();
 
     $link.trigger('click');
     expect($menuItem.hasClass('menu-opened')).toEqual(true);
@@ -26,22 +26,22 @@ describe('jquery-simple-menu', function() {
     expect(window.alert).toHaveBeenCalledWith('#Menu3');
   });
 
-  it('keeps opened menu by click', function() {
-    var $menu = $('#click_keep_menu');
-    var $menuItem = $menu.find('li:first');
-    var $link = $menuItem.find('a:first');
+  it('keeps opened menu by click', () => {
+    let $menu = $('#click_keep_menu');
+    let $menuItem = $menu.find('li').first();
+    let $link = $menuItem.find('a').first();
 
     $link.trigger('click');
     expect($menuItem.hasClass('menu-opened')).toEqual(true);
 
-    $menuItem.find('ul > li:first > a:first').trigger('click');
+    $menuItem.find('ul:first-of-type > li:first-child > a:first-child').trigger('click');
     expect($menuItem.hasClass('menu-opened')).toEqual(true);
   });
 
-  it('opens menu by hovering', function() {
-    var $menu = $('#hover_menu');
-    var $menuItem = $menu.find('li:first');
-    var $link = $menuItem.find('a:first');
+  it('opens menu by hovering', () => {
+    let $menu = $('#hover_menu');
+    let $menuItem = $menu.find('li').first();
+    let $link = $menuItem.find('a').first();
 
     $menuItem.trigger('mouseenter');
     expect($menuItem.hasClass('menu-opened')).toEqual(true);
@@ -53,15 +53,15 @@ describe('jquery-simple-menu', function() {
     expect($menuItem.hasClass('menu-opened')).toEqual(false);
   });
 
-  it('keeps opened menu by hovering', function() {
-    var $menu = $('#hover_keep_menu');
-    var $menuItem = $menu.find('li:first');
-    var $link = $menuItem.find('a:first');
+  it('keeps opened menu by hovering', () => {
+    let $menu = $('#hover_keep_menu');
+    let $menuItem = $menu.find('li').first();
+    let $link = $menuItem.find('a').first();
 
     $menuItem.trigger('mouseenter');
     expect($menuItem.hasClass('menu-opened')).toEqual(true);
 
-    var $firstItem = $menuItem.find('ul > li:first > a:first');
+    let $firstItem = $menuItem.find('ul:first-of-type > li:first-child > a:first-child');
     $firstItem.trigger('click');
     expect($menuItem.hasClass('menu-opened')).toEqual(true);
     expect($firstItem.parent().hasClass('menu-checked')).toEqual(true);
@@ -71,9 +71,9 @@ describe('jquery-simple-menu', function() {
     expect($firstItem.parent().hasClass('menu-checked')).toEqual(false);
   });
 
-  it('opens context menu', function() {
-    var $menu = $('#context_menu');
-    var $container = $('#container');
+  it('opens context menu', () => {
+    let $menu = $('#context_menu');
+    let $container = $('#container');
 
     $container.trigger('contextmenu');
     expect($menu.is(':visible')).toEqual(true);
