@@ -25,17 +25,17 @@ export default class SimpleMenu {
   }
 
   init() {
-    this.$menu.addClass(`${NAMESPACE} menu-${this.options.align}`);
-    this.$menu.find('ul').addClass('menu-vertical');
-    this.$menu.find('li:has(>ul)').addClass('menu-openable');
+    this.$menu.addClass(`${NAMESPACE} ${NAMESPACE}-${this.options.align}`);
+    this.$menu.find('ul').addClass(`${NAMESPACE}-vertical`);
+    this.$menu.find('li:has(>ul)').addClass(`${NAMESPACE}-openable`);
 
     if (this.options.context) {
-      this.$menu.addClass('menu-context').hide();
+      this.$menu.addClass(`${NAMESPACE}-context`).hide();
     }
     if (this.options.checkable) {
       let $submenu = this.$menu.find(this.options.checkable);
-      $submenu.find('li').addClass('menu-space');
-      $submenu.find('li:not(:has(>ul))').addClass('menu-checkable');
+      $submenu.find('li').addClass(`${NAMESPACE}-space`);
+      $submenu.find('li:not(:has(>ul))').addClass(`${NAMESPACE}-checkable`);
     }
 
     this.unbind();
@@ -55,11 +55,11 @@ export default class SimpleMenu {
 
     this.$menu.on(`click.${this.namespace}`, 'a', (e) => {
       let $li = $(e.target).parent();
-      if ($li.hasClass('menu-checkable')) {
+      if ($li.hasClass(`${NAMESPACE}-checkable`)) {
         this.toggleCheck($li);
         e.preventDefault();
       }
-      if ($li.hasClass('menu-openable')) {
+      if ($li.hasClass(`${NAMESPACE}-openable`)) {
         e.preventDefault();
       }
     });
@@ -155,17 +155,17 @@ export default class SimpleMenu {
   }
 
   isOpened($submenu) {
-    return $submenu.parent().hasClass('menu-opened');
+    return $submenu.parent().hasClass(`${NAMESPACE}-opened`);
   }
 
   open($submenu) {
     this.closeAll();
-    $submenu.parent().addClass('menu-opened');
+    $submenu.parent().addClass(`${NAMESPACE}-opened`);
     $submenu.css('display', 'flex');
   }
 
   close($submenu) {
-    $submenu.parent().removeClass('menu-opened')
+    $submenu.parent().removeClass(`${NAMESPACE}-opened`)
     $submenu.css('display', 'none');
   }
 
@@ -184,16 +184,16 @@ export default class SimpleMenu {
   }
 
   isChecked($li) {
-    return $li.hasClass('menu-checked');
+    return $li.hasClass(`${NAMESPACE}-checked`);
   }
 
   check($li) {
-    $li.addClass('menu-checked');
+    $li.addClass(`${NAMESPACE}-checked`);
     this.$menu.trigger('menu:checked', [$li]);
   }
 
   uncheck($li) {
-    $li.removeClass('menu-checked');
+    $li.removeClass(`${NAMESPACE}-checked`);
     this.$menu.trigger('menu:unchecked', [$li]);
   }
 

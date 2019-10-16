@@ -59,7 +59,7 @@
     </li>
   </ul>
   <script>
-  $(document).on('click', '#click_menu li:not(.menu-openable) > a', function(e) {
+  $(document).on('click', '#click_menu li:not(.simple-menu-openable) > a', function(e) {
     alert($(e.target).attr('href'));
   });
   $('#click_menu').simpleMenu();
