@@ -6,7 +6,8 @@ const DEFAULTS = {
   context: null,
   checkable: null,
   autoOpen: false,
-  keepOpen: false
+  keepOpen: false,
+  handler: ':not(ul):not(li)'
 };
 
 export default class SimpleMenu {
@@ -53,7 +54,7 @@ export default class SimpleMenu {
       this.bindClick();
     }
 
-    this.$menu.on(`click.${this.namespace}`, 'a', (e) => {
+    this.$menu.on(`click.${this.namespace}`, this.options.handler, (e) => {
       let $li = $(e.target).parent();
       if ($li.hasClass(`${NAMESPACE}-checkable`)) {
         this.toggleCheck($li);
@@ -132,7 +133,7 @@ export default class SimpleMenu {
       });
     });
 
-    this.$menu.on(`click.${this.namespace}`, 'a', (e) => {
+    this.$menu.on(`click.${this.namespace}`, this.options.handler, (e) => {
       this.$menu.hide();
     });
     $(document).on(`click.${this.namespace}`, (e) => {
