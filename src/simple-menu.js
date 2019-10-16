@@ -15,7 +15,10 @@ export default class SimpleMenu {
 
     this.$menu = $(menu);
     this.$context = $(this.options.context);
+
     this.uid = new Date().getTime() + Math.random();
+    this.namespace = `${NAMESPACE}-${this.uid}`;
+
     this.active = false;
 
     this.init();
@@ -50,7 +53,7 @@ export default class SimpleMenu {
       this.bindClick();
     }
 
-    this.$menu.on(`click.${NAMESPACE}`, 'a', (e) => {
+    this.$menu.on(`click.${this.namespace}`, 'a', (e) => {
       let $li = $(e.target).parent();
       if ($li.hasClass('menu-checkable')) {
         this.toggleCheck($li);
@@ -63,7 +66,7 @@ export default class SimpleMenu {
   }
 
   bindClick() {
-    this.$menu.on(`click.${NAMESPACE}`, '> li', (e) => {
+    this.$menu.on(`click.${this.namespace}`, '> li', (e) => {
       let $submenu = $(e.currentTarget).children('ul');
       if ($submenu.length) {
         if (this.isOpened($submenu)) {
@@ -76,7 +79,7 @@ export default class SimpleMenu {
           this.active = true;
         }
       }
-    }).on(`mouseenter.${NAMESPACE}`, '> li', (e) => {
+    }).on(`mouseenter.${this.namespace}`, '> li', (e) => {
       if (this.active) {
         let $submenu = $(e.currentTarget).children('ul');
         if ($submenu.length) {
@@ -85,7 +88,7 @@ export default class SimpleMenu {
       }
     });
 
-    $(document).on(`click.${NAMESPACE}-${this.uid}`, (e) => {
+    $(document).on(`click.${this.namespace}`, (e) => {
       if (!$.contains(this.$menu[0], e.target)) {
         this.closeAll();
         this.active = false;
@@ -94,12 +97,12 @@ export default class SimpleMenu {
   }
 
   bindHover() {
-    this.$menu.on(`mouseenter.${NAMESPACE}`, '> li', (e) => {
+    this.$menu.on(`mouseenter.${this.namespace}`, '> li', (e) => {
       let $submenu = $(e.currentTarget).children('ul');
       if ($submenu.length) {
         this.open($submenu);
       }
-    }).on(`mouseleave.${NAMESPACE}`, '> li', (e) => {
+    }).on(`mouseleave.${this.namespace}`, '> li', (e) => {
       let $submenu = $(e.currentTarget).children('ul');
       if ($submenu.length) {
         this.close($submenu);
@@ -107,7 +110,7 @@ export default class SimpleMenu {
     });
 
     if (!this.options.keepOpen) {
-      this.$menu.on(`click.${NAMESPACE}`, '> li', (e) => {
+      this.$menu.on(`click.${this.namespace}`, '> li', (e) => {
         if (e.target.parentNode != e.currentTarget) {
           let $submenu = $(e.currentTarget).children('ul');
           if ($submenu.length) {
@@ -119,7 +122,7 @@ export default class SimpleMenu {
   }
 
   bindContext() {
-    this.$context.on(`contextmenu.${NAMESPACE}`, (e) => {
+    this.$context.on(`contextmenu.${this.namespace}`, (e) => {
       e.preventDefault();
       this.$menu.css({
         display: 'flex',
@@ -129,18 +132,18 @@ export default class SimpleMenu {
       });
     });
 
-    this.$menu.on(`click.${NAMESPACE}`, 'a', (e) => {
+    this.$menu.on(`click.${this.namespace}`, 'a', (e) => {
       this.$menu.hide();
     });
-    $(document).on(`click.${NAMESPACE}-${this.uid}`, (e) => {
+    $(document).on(`click.${this.namespace}`, (e) => {
       this.$menu.hide();
     });
   }
 
   unbind() {
-    this.$menu.off(`.${NAMESPACE}`);
-    this.$context.off(`.${NAMESPACE}`);
-    $(document).off(`.${NAMESPACE}-${this.uid}`)
+    this.$menu.off(`.${this.namespace}`);
+    this.$context.off(`.${this.namespace}`);
+    $(document).off(`.${this.namespace}`)
   }
 
   toggle($submenu) {
