@@ -81,4 +81,13 @@ describe('jquery-simple-menu', () => {
     $container.trigger('click');
     expect($menu.is(':visible')).toEqual(false);
   });
+
+  it('destroy', () => {
+    eval($('script').text());
+    let $menu = $('#click_menu');
+    $menu.data('simple-menu').destroy();
+
+    expect($menu.hasClass('simple-upload')).toEqual(false);
+    expect($._data($menu.get(0), 'events')).toEqual(undefined);
+  });
 });

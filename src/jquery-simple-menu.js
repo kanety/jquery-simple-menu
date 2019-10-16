@@ -7,10 +7,8 @@ import './jquery-simple-menu.scss';
 $.fn.simpleMenu = function(options) {
   return this.each((i, elem) => {
     let $elem = $(elem);
-    if (!$elem.data(NAMESPACE)) {
-      let sm = new SimpleMenu($elem, options);
-      $elem.data(NAMESPACE, sm);
-    }
+    if ($elem.data(NAMESPACE)) $elem.data(NAMESPACE).destroy();
+    $elem.data(NAMESPACE, new SimpleMenu($elem, options));
   });
 };
 

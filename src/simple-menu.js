@@ -43,6 +43,20 @@ export default class SimpleMenu {
     this.bind();
   }
 
+  destroy() {
+    this.$menu.removeClass(NAMESPACE)
+              .removeClass(`${NAMESPACE}-${this.options.align}`)
+              .removeClass(`${NAMESPACE}-context`);
+    this.$menu.find('ul')
+              .removeClass(`${NAMESPACE}-vertical`);
+    this.$menu.find('li')
+              .removeClass(`${NAMESPACE}-openable`)
+              .removeClass(`${NAMESPACE}-space`)
+              .removeClass(`${NAMESPACE}-checkable`);
+
+    this.unbind();
+  }
+
   bind() {
     if (this.options.context) {
       this.bindContext();
