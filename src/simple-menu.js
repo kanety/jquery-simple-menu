@@ -202,6 +202,6 @@ export default class SimpleMenu {
   }
 
   static setDefaults(options) {
-    $.extend(true, DEFAULTS, options);
+    return $.extend(true, DEFAULTS, options);
   }
 }
