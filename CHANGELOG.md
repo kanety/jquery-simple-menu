@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 0.3.0
+
+* Fix menu handler and css.
+* Fix event namespace.
+* Destroy existing instance on initialization.
+
 ## 0.2.1
 
 * Remove stopPropagation call.

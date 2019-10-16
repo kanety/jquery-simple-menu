@@ -35,6 +35,8 @@ Then run:
 $('#menu').simpleMenu();
 ```
 
+### Options
+
 Open menu by mouse hovering:
 
 ```javascript
@@ -52,14 +54,6 @@ $('#menu').simpleMenu({
 });
 ```
 
-Set checkable submenu:
-
-```javascript
-$('#menu').simpleMenu({
-  checkable: 'ul:first'
-});
-```
-
 Change to vertical align:
 
 ```javascript
@@ -68,9 +62,19 @@ $('#menu').simpleMenu({
 });
 ```
 
-## Context menu
+### Checkable menu
 
-Set context menu container as follows:
+```javascript
+$('#menu').simpleMenu({
+  checkable: '.checkable-submenu'
+}).on('menu:checked', function(e, $li) {
+  ...
+}).on('menu:unchecked', function(e, $li) {
+  ...
+})
+```
+
+### Context menu
 
 ```html
 <div id="container"></div>
@@ -91,6 +95,27 @@ $('#menu').simpleMenu({
   context: '#container',
   align: 'vertical'
 });
+```
+
+## Other example
+
+Use button tag instead of a tag:
+
+```html
+<ul id="menu">
+  <li>
+    <button>Menu</button>
+    <ul style="width: 120px;">
+      <li><a href="#">Menu1</a></li>
+      <li><a href="#">Menu2</a></li>
+      <li><a href="#">Menu3</a></li>
+    </ul>
+  </li>
+</ul>
+```
+
+```javascript
+$('#menu').simpleMenu();
 ```
 
 ## License
