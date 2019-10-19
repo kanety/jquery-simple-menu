@@ -1,7 +1,21 @@
-.simple-menu {
+$NAMESPACE: simple-menu;
+
+.#{$NAMESPACE} {
   display: flex;
   margin: 0;
   padding: 0;
+
+  &-horizontal {
+    flex-direction: row;
+  }
+  &-vertical {
+    flex-direction: column;
+
+    > li > ul {
+      top: 0;
+      left: 100%;
+    }
+  }
 
   ul {
     display: none;
@@ -17,53 +31,30 @@
     padding: 0;
     list-style-type: none;
   }
-
-  &.simple-menu-horizontal,
-  ul.simple-menu-horizontal {
-    flex-direction: row;
-  }
-
-  &.simple-menu-vertical,
-  ul.simple-menu-vertical {
-    flex-direction: column;
-
-    > li.simple-menu-openable > :not(ul):not(li):after {
-      float: right;
-      transform: rotate(-90deg);
-    }
-
-    > li > ul {
-      top: 0;
-      left: 100%;
-    }
-  }
-
-  > li > ul {
-    li:hover > ul {
-      display: flex;
-    }
-  }
-
-  li.simple-menu-openable > :not(ul):not(li):after {
+  &-openable > :not(ul):after {
     content: '▼';
     margin: 2px;
     font-size: 0.6em;
     font-weight: bold;
+
+    .#{$NAMESPACE}-vertical > & {
+      float: right;
+      transform: rotate(-90deg);
+    }
   }
-  li.simple-menu-opened > ul {
+  &-opened > ul {
     display: flex;
   }
-
-  li.simple-menu-space,
-  li.simple-menu-checkable {
-    > :not(ul):not(li):before {
+  &-space,
+  &-checkable {
+    > :not(ul):before {
       display: inline-block;
       width: 1em;
       content: '　';
     }
   }
-  li.simple-menu-checked {
-    > :not(ul):not(li):before {
+  &-checked {
+    > :not(ul):before {
       content: '✓';
     }
   }

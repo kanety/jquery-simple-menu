@@ -6,8 +6,7 @@ const DEFAULTS = {
   context: null,
   checkable: null,
   autoOpen: false,
-  keepOpen: false,
-  handler: ':not(ul):not(li)'
+  keepOpen: false
 };
 
 export default class SimpleMenu {
@@ -20,8 +19,6 @@ export default class SimpleMenu {
     this.uid = new Date().getTime() + Math.random();
     this.namespace = `${NAMESPACE}-${this.uid}`;
 
-    this.active = false;
-
     this.init();
   }
 
@@ -33,34 +30,42 @@ export default class SimpleMenu {
     if (this.options.context) {
       this.$menu.addClass(`${NAMESPACE}-context`).hide();
     }
+
     if (this.options.checkable) {
-      let $submenu = this.$menu.find(this.options.checkable);
-      $submenu.find('li').addClass(`${NAMESPACE}-space`);
-      $submenu.find('li:not(:has(>ul))').addClass(`${NAMESPACE}-checkable`);
+      let $menu = this.$menu.find(this.options.checkable);
+      $menu.find('li').addClass(`${NAMESPACE}-space`);
+      $menu.find('li:not(:has(>ul))').addClass(`${NAMESPACE}-checkable`);
     }
+
+    this.active = false;
 
     this.unbind();
     this.bind();
   }
 
   destroy() {
-    this.$menu.removeClass(NAMESPACE)
-              .removeClass(`${NAMESPACE}-${this.options.align}`)
-              .removeClass(`${NAMESPACE}-context`);
-    this.$menu.find('ul')
-              .removeClass(`${NAMESPACE}-vertical`);
-    this.$menu.find('li')
-              .removeClass(`${NAMESPACE}-openable`)
-              .removeClass(`${NAMESPACE}-space`)
-              .removeClass(`${NAMESPACE}-checkable`);
+    let detector = (i, className) => {
+      let reg = new RegExp(`${NAMESPACE}(-\\S+)?`, 'g');
+      return (className.match(reg) || []).join(' ');
+    }
+    this.$menu.removeClass(detector)
+    this.$menu.find('ul').removeClass(detector);
+    this.$menu.find('li').removeClass(detector)
 
     this.unbind();
   }
 
   bind() {
-    if (this.options.context) {
-      this.bindContext();
-    }
+    this.$menu.on(`click.${this.namespace}`, 'li > :not(ul)', (e) => {
+      let $li = $(e.target).parent();
+      if ($li.hasClass(`${NAMESPACE}-openable`)) {
+        e.preventDefault();
+      }
+      if ($li.hasClass(`${NAMESPACE}-checkable`)) {
+        this.toggleCheck($li);
+        e.preventDefault();
+      }
+    });
 
     if (this.options.autoOpen) {
       this.bindHover();
@@ -68,72 +73,56 @@ export default class SimpleMenu {
       this.bindClick();
     }
 
-    this.$menu.on(`click.${this.namespace}`, this.options.handler, (e) => {
-      let $li = $(e.target).parent();
-      if ($li.hasClass(`${NAMESPACE}-checkable`)) {
-        this.toggleCheck($li);
-        e.preventDefault();
-      }
-      if ($li.hasClass(`${NAMESPACE}-openable`)) {
-        e.preventDefault();
-      }
-    });
+    if (this.options.context) {
+      this.bindContext();
+    }
   }
 
   bindClick() {
-    this.$menu.on(`click.${this.namespace}`, '> li', (e) => {
-      let $submenu = $(e.currentTarget).children('ul');
-      if ($submenu.length) {
-        if (this.isOpened($submenu)) {
-          if (!this.options.keepOpen) {
-            this.close($submenu);
-            this.active = false;
-          }
+    this.$menu.on(`click.${this.namespace}`, 'li > :not(ul)', (e) => {
+      let $li = $(e.target).parent();
+      if (this.isOpenable($li)) {
+        if (this.isOpened($li)) {
+          this.close($li.find('ul'));
         } else {
-          this.open($submenu);
+          this.openMenus($li);
           this.active = true;
         }
-      }
-    }).on(`mouseenter.${this.namespace}`, '> li', (e) => {
-      if (this.active) {
-        let $submenu = $(e.currentTarget).children('ul');
-        if ($submenu.length) {
-          this.open($submenu);
-        }
+      } else if (!this.options.keepOpen) {
+        this.closeAllMenus();
+        this.active = false;
       }
     });
 
+    if (!this.isTouchDevice()) {
+      this.$menu.on(`mouseenter.${this.namespace}`, 'li > :not(ul)', (e) => {
+        let $li = $(e.target).parent();
+        if (this.isOpenable($li) && this.active) {
+          this.openMenus($li);
+        }
+      });
+    }
+
     $(document).on(`click.${this.namespace}`, (e) => {
       if (!$.contains(this.$menu[0], e.target)) {
-        this.closeAll();
+        this.closeAllMenus();
         this.active = false;
       }
     });
   }
 
   bindHover() {
-    this.$menu.on(`mouseenter.${this.namespace}`, '> li', (e) => {
-      let $submenu = $(e.currentTarget).children('ul');
-      if ($submenu.length) {
-        this.open($submenu);
+    this.$menu.on(`mouseenter.${this.namespace}`, 'li', (e) => {
+      let $li = $(e.target).parent();
+      if (this.isOpenable($li)) {
+        this.openMenus($li);
       }
     }).on(`mouseleave.${this.namespace}`, '> li', (e) => {
-      let $submenu = $(e.currentTarget).children('ul');
-      if ($submenu.length) {
-        this.close($submenu);
-      }
+      this.closeAllMenus();
+    }).on(`click.${this.namespace}`, 'li > :not(ul)', (e) => {
+      let $li = $(e.target).parent();
+      if (!this.options.keepOpen && !this.isOpenable($li)) this.closeAllMenus();
     });
-
-    if (!this.options.keepOpen) {
-      this.$menu.on(`click.${this.namespace}`, '> li', (e) => {
-        if (e.target.parentNode != e.currentTarget) {
-          let $submenu = $(e.currentTarget).children('ul');
-          if ($submenu.length) {
-            this.close($submenu);
-          }
-        }
-      });
-    }
   }
 
   bindContext() {
@@ -147,11 +136,16 @@ export default class SimpleMenu {
       });
     });
 
-    this.$menu.on(`click.${this.namespace}`, this.options.handler, (e) => {
-      this.$menu.hide();
+    this.$menu.on(`click.${this.namespace}`, 'li > :not(ul)', (e) => {
+      let $li = $(e.target).parent();
+      if (!this.isOpenable($li)) {
+        this.$menu.hide();
+      }
     });
     $(document).on(`click.${this.namespace}`, (e) => {
-      this.$menu.hide();
+      if (!$.contains(this.$menu[0], e.target)) {
+        this.$menu.hide();
+      }
     });
   }
 
@@ -161,33 +155,39 @@ export default class SimpleMenu {
     $(document).off(`.${this.namespace}`)
   }
 
-  toggle($submenu) {
-    if (this.isOpened($submenu)) {
-      this.close($submenu);
-    } else {
-      this.open($submenu);
-    }
+  isOpenable($li) {
+    return $li.hasClass(`${NAMESPACE}-openable`);
   }
 
-  isOpened($submenu) {
-    return $submenu.parent().hasClass(`${NAMESPACE}-opened`);
+  isOpened($li) {
+    return $li.hasClass(`${NAMESPACE}-opened`);
   }
 
-  open($submenu) {
-    this.closeAll();
-    $submenu.parent().addClass(`${NAMESPACE}-opened`);
-    $submenu.css('display', 'flex');
+  findMenus($li) {
+    return $li.parents(`ul:has(.${NAMESPACE}-vertical, .${NAMESPACE}-horizontal)`).add($li.children('ul'));
   }
 
-  close($submenu) {
-    $submenu.parent().removeClass(`${NAMESPACE}-opened`)
-    $submenu.css('display', 'none');
-  }
-
-  closeAll() {
-    this.$menu.find('> li > ul').each((i, elem) => {
-      this.close($(elem));
+  openMenus($li) {
+    this.closeAllMenus();
+    this.findMenus($li).each((i, menu) => {
+      this.open($(menu));
     });
+  }
+
+  closeAllMenus() {
+    this.$menu.find('ul').each((i, menu) => {
+      this.close($(menu));
+    });
+  }
+
+  open($menu) {
+    $menu.parent().addClass(`${NAMESPACE}-opened`);
+    $menu.css('display', 'flex');
+  }
+
+  close($menu) {
+    $menu.parent().removeClass(`${NAMESPACE}-opened`)
+    $menu.css('display', 'none');
   }
 
   toggleCheck($li) {
@@ -212,6 +212,10 @@ export default class SimpleMenu {
     this.$menu.trigger('menu:unchecked', [$li]);
   }
 
+  isTouchDevice() {
+    return window.ontouchstart && navigator.userAgent.match(/(iPhone|iPod|Android|Windows Phone)/i);
+  }
+  
   static getDefaults() {
     return DEFAULTS;
   }
