@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 0.4.0
+
+* Support touch device.
+* Bundle css with js.
+
 ## 0.3.0
 
 * Fix menu handler and css.
