@@ -1,7 +1,4 @@
 const webpack = require("webpack");
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
-const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 
 module.exports = {
   entry: {
@@ -18,22 +15,6 @@ module.exports = {
     jquery: "jQuery"
   },
 
-  plugins: [
-    new MiniCssExtractPlugin({
-      filename: "[name].css"
-    })
-  ],
-
-  optimization: {
-    minimizer: [
-      new UglifyJsPlugin({
-        cache: true,
-        parallel: true
-      }),
-      new OptimizeCSSAssetsPlugin({})
-    ]
-  },
-
   module: {
     rules: [
       {
@@ -47,7 +28,7 @@ module.exports = {
       }, {
         test: /\.scss$/,
         use: [
-          MiniCssExtractPlugin.loader,
+          "style-loader",
           "css-loader",
           "sass-loader"
         ],

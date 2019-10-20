@@ -1,5 +1,6 @@
 import $ from 'jquery';
 import { NAMESPACE } from './consts';
+import './simple-menu.scss';
 
 const DEFAULTS = {
   align: 'horizontal',
