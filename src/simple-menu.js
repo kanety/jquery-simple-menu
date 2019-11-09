@@ -85,6 +85,7 @@ export default class SimpleMenu {
       if (this.isOpenable($li)) {
         if (this.isOpened($li)) {
           this.close($li.find('ul'));
+          if (this.isRoot($li)) this.active = false;
         } else {
           this.openMenus($li);
           this.active = true;
@@ -154,6 +155,10 @@ export default class SimpleMenu {
     this.$menu.off(`.${this.namespace}`);
     this.$context.off(`.${this.namespace}`);
     $(document).off(`.${this.namespace}`)
+  }
+
+  isRoot($li) {
+    return $li.parent('ul').hasClass(NAMESPACE);
   }
 
   isOpenable($li) {
