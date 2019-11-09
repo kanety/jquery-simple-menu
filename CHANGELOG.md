@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.4.1
+
+* Make inactive when clicked root menu.
+
 ## 0.4.0
 
 * Support touch device.
