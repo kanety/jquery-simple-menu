@@ -46,17 +46,16 @@ module.exports = function(config) {
     webpack: (function() {
       var webpack = require('./webpack.config');
       webpack.mode = 'development';
+      webpack.devtool = 'inline-source-map';
       webpack.module.rules.push({
         test: /\.js$/,
         include: /src/,
         exclude: /node_modules/,
         enforce: 'post',
         use: {
-          loader: 'istanbul-instrumenter-loader',
-          options: { esModules: true }
+          loader: 'coverage-istanbul-loader'
         }
       });
-      webpack.devtool = 'inline-source-map';
       return webpack;
     })(),
 
@@ -91,13 +90,13 @@ module.exports = function(config) {
 
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-    browsers: (function() {
-      if (process.platform === "win32") {
-        return ['Chrome', 'Firefox', 'IE', 'Edge']
-      } else {
-        return ['ChromeHeadless', 'FirefoxHeadless']
-      }
-    })(),
+    browsers: ['ChromeHeadless', 'FirefoxHeadless', 'EdgeHeadless', 'IE'],
+
+
+    plugins: [
+      'karma-*',
+      require('@chiragrupani/karma-chromium-edge-launcher')
+    ],
 
 
     // Continuous Integration mode
